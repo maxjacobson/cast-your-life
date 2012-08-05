@@ -31,7 +31,7 @@
   </script>
 
   <script type="text/x-handlebars" data-template-name="movies">
-    <h3>Movies</h3>
+    <h2>Movies</h2>
     <ul>
       {{#each movie in controller}}
         {{#with movie}}
@@ -42,7 +42,29 @@
   </script>
 
   <script type="text/x-handlebars" data-template-name="movie">
-    <h1>{{title}}</h1>
+    <h2>{{title}}</h2>
+    <div>{{view Em.TextField}} will be played by {{view Em.TextField valueBinding="App.played_by"}}</div>
+    {{#with App.tmdbPeople.content as people}}
+      {{view App.SelectionView}}
+    {{/with}}
+    {{#each man in mans}}
+      {{man.name}}
+    {{/each}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="selection">
+    {{#each person in people}}
+      <div>
+  	    <h3 class="name">{{person.name}}</h3>
+        {{#each img in person.fullImagePaths}}
+          {{#with img}}
+            <div class="profile">
+              <a {{action selectImage person href=true}}><img {{bindAttr src="this"}}/></a>
+            </div>
+          {{/with}}
+        {{/each}}
+	  </div>
+    {{/each}}
   </script>
 
   <!-- The missing protocol means that it will match the current protocol, either http or https. If running locally, we use the local jQuery. -->

@@ -1,0 +1,9 @@
+/* line 1, ../sass/styles.scss */
+.profile {
+  display: inline-block;
+}
+/* line 3, ../sass/styles.scss */
+.profile img {
+  max-width: 128px;
+  max-height: 128px;
+}
