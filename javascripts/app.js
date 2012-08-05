@@ -39,8 +39,6 @@ App.store = DS.Store.create({
 });
 
 
-App.tmdb = DS.
-
 /***********************
  * Controllers & Views *
  ***********************/
