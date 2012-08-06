@@ -1,5 +1,3 @@
-var http = require('http');
-
 var responses = {
   search: {
     "page": 1, 
@@ -42,6 +40,9 @@ var responses = {
   }
 };
 
+/*
+// The awful, crude way
+var http = require('http');
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'application/json'});
   var response;
@@ -52,6 +53,18 @@ http.createServer(function (req, res) {
     response = responses.images;
   }
   res.end(JSON.stringify(response));
-//  res.end(JSON.stringify({ url: req.url }));
-}).listen(3000, '127.0.0.1');
-console.log('Spoofing tmdb API nodes: "search/person", "person/:person_id/images"');
+}).listen(3000, '127.0.0.1');*/
+
+
+var express = require('express');
+var app = express();
+
+app.get('/search/person', function(req, res) {
+  res.send(responses.search);
+});
+app.get('/person/:person_id/images', function(req, res) {
+  res.send(responses.images);
+});
+
+app.listen(3000);
+console.log('Spoofing tmdb API on port 3000');
