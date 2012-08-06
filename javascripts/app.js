@@ -1,7 +1,5 @@
-var App = Em.Application.create({
-  ready: function() {
-  }
-});
+var App = Em.Application.create({});
+
 
 /********
  * Data *
@@ -9,10 +7,10 @@ var App = Em.Application.create({
 
 App.Movie = DS.Model.extend({
   title: DS.attr('string'),
-  people: DS.hasMany('App.Person', { embedded: true })
+  members: DS.hasMany('App.Member', { embedded: true })
 });
 
-App.Man = DS.Model.extend({
+App.Member = DS.Model.extend({
   name: DS.attr('string'),
   actor_name: DS.attr('string'),
   actor_image: DS.attr('string')
@@ -25,21 +23,9 @@ App.Movie.FIXTURES = [
   },
   {
     id: 2,
-    title: 'Max Jacobson and the Horrible Lights',
-    mans: [
-      {
-        id: 1,
-        name: 'Dad',
-        actor_name: 'Brad',
-        actor_image: 'http://cf2.imgobject.com/t/p/w185/w8zJQuN7tzlm6FY9mfGKihxp3Cb.jpg'
-      }
-    ]
+    title: 'Max Jacobson and the Horrible Lights'
   }
 ];
-
-// App.Adapter = DS.RESTAdapter.extend({
-
-// });
 
 App.store = DS.Store.create({
   revision: 4,
@@ -61,6 +47,13 @@ App.MoviesView = Em.View.extend({
   templateName: 'movies'
 });
 
+App.MovieController = Em.ObjectController.extend({});
+App.MovieView = Em.View.extend({
+  templateName: 'movie',
+
+});
+
+
 App.TMDBPerson = Em.Object.extend({
   id: null,
   name: null,
@@ -79,15 +72,26 @@ App.tmdbPeople = Em.ArrayController.create({
   content: []
 });
 
-App.MovieController = Em.ObjectController.extend({});
-App.MovieView = Em.View.extend({
-  templateName: 'movie',
+App.CreateMemberView = Em.View.extend({
+  templateName: 'create-member',
+  createMember: function(event) {
+    if 
+    this.get('members').createRecord({
+      name: this.get('member_name'),
+      actor_name: event.contexts[0],
+      actor_image: event.contexts[1]
+    });
+    App.store.commit();
+  },
   getImages: function() {
-    // var url_prefix = 'http://api.themoviedb.org/3/'
-    var url_prefix = '/tmdb?request='
+    var api = {
+      //url_prefix: 'http://api.themoviedb.org/3/',
+      url_prefix: '/tmdb?request=',
+      key: ''
+    };
     $.get(url_prefix + 'search/person', {
-      api_key: '',
-      query: App.get('played_by')
+      api_key: api.key,
+      query: this.get('actor_name')
     }, function(search_res) {
       App.get('tmdbPeople').clear();
       search_res.results.forEach(function(person) {
@@ -97,7 +101,7 @@ App.MovieView = Em.View.extend({
         });
         App.get('tmdbPeople').pushObject(tmdbPerson);
         $.get(url_prefix + 'person/%@/images'.fmt(person.id), {
-          api_key: ''
+          api_key: api.key
         }, function(images_res) {
           var images = images_res.profiles.map(function(profile) {
             return profile.file_path;
@@ -106,11 +110,7 @@ App.MovieView = Em.View.extend({
         });
       });
     });
-  }.observes('App.played_by')
-});
-
-App.SelectionView = Em.View.extend({
-  templateName: 'selection'
+  }.observes('actor_name')
 });
 
 App.PeopleController = Em.ArrayController.extend({});
@@ -118,6 +118,7 @@ App.PeopleController = Em.ArrayController.extend({});
 App.NameField = Em.TextField.extend({
   contentBinding: ''
 });
+
 
 /**********
  * Router *
@@ -154,13 +155,6 @@ App.Router = Em.Router.extend({
         show: Em.Route.extend({
           route: '/'
         }),
-        selectImage: function(router, context) {
-          // App.Person.createRecord();
-          // App.store.commit();
-        },
-        eventTransitions: {
-          selectImage: 'show'
-        }
       })
     })
   })

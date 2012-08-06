@@ -54,4 +54,4 @@ http.createServer(function (req, res) {
   res.end(JSON.stringify(response));
 //  res.end(JSON.stringify({ url: req.url }));
 }).listen(3000, '127.0.0.1');
-
+console.log('Spoofing tmdb API nodes: "search/person", "person/:person_id/images"');

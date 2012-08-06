@@ -43,27 +43,32 @@
 
   <script type="text/x-handlebars" data-template-name="movie">
     <h2>{{title}}</h2>
-    <div>{{view Em.TextField}} will be played by {{view Em.TextField valueBinding="App.played_by"}}</div>
-    {{#with App.tmdbPeople.content as people}}
-      {{view App.SelectionView}}
-    {{/with}}
-    {{#each man in mans}}
-      {{man.name}}
+    {{#each members}}
+      <div class="member-item">
+        <img {{bindAttr src="actor_image"}}/>
+        {{name}} will be played by {{actor_name}}
+      </div>
     {{/each}}
+    {{view App.CreateMemberView membersBinding="members"}}
   </script>
 
-  <script type="text/x-handlebars" data-template-name="selection">
-    {{#each person in people}}
+  <script type="text/x-handlebars" data-template-name="create-member">
+    <div>
+      {{view Em.TextField valueBinding="view.member_name" placeholder="Someone I know"}}
+      will be played by
+      {{view Em.TextField valueBinding="view.actor_name" placeholder="an actor we're searching for..."}}
+    </div>
+    {{#each person in App.tmdbPeople.content}}
       <div>
-  	    <h3 class="name">{{person.name}}</h3>
+        <h3 class="name">{{person.name}}</h3>
         {{#each img in person.fullImagePaths}}
           {{#with img}}
             <div class="profile">
-              <a {{action selectImage person href=true}}><img {{bindAttr src="this"}}/></a>
+              <a href="#" {{action createMember person.name img target="view"}}><img {{bindAttr src="this"}}/></a>
             </div>
           {{/with}}
         {{/each}}
-	  </div>
+      </div>
     {{/each}}
   </script>
 

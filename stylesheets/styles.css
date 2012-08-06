@@ -7,3 +7,9 @@
   max-width: 128px;
   max-height: 128px;
 }
+
+/* line 10, ../sass/styles.scss */
+.member-item img {
+  max-width: 96px;
+  max-height: 96px;
+}
