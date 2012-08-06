@@ -75,7 +75,6 @@ App.tmdbPeople = Em.ArrayController.create({
 App.CreateMemberView = Em.View.extend({
   templateName: 'create-member',
   createMember: function(event) {
-    if 
     this.get('members').createRecord({
       name: this.get('member_name'),
       actor_name: event.contexts[0],
@@ -89,7 +88,7 @@ App.CreateMemberView = Em.View.extend({
       url_prefix: '/tmdb?request=',
       key: ''
     };
-    $.get(url_prefix + 'search/person', {
+    $.get(api.url_prefix + 'search/person', {
       api_key: api.key,
       query: this.get('actor_name')
     }, function(search_res) {
@@ -100,7 +99,7 @@ App.CreateMemberView = Em.View.extend({
           name: person.name
         });
         App.get('tmdbPeople').pushObject(tmdbPerson);
-        $.get(url_prefix + 'person/%@/images'.fmt(person.id), {
+        $.get(api.url_prefix + 'person/%@/images'.fmt(person.id), {
           api_key: api.key
         }, function(images_res) {
           var images = images_res.profiles.map(function(profile) {

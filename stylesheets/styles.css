@@ -8,8 +8,17 @@
   max-height: 128px;
 }
 
+/* line 9, ../sass/styles.scss */
+.member-item {
+  padding: 5px;
+}
 /* line 10, ../sass/styles.scss */
 .member-item img {
   max-width: 96px;
   max-height: 96px;
+}
+
+/* line 17, ../sass/styles.scss */
+.inputs input {
+  width: 180px;
 }
