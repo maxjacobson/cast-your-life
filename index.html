@@ -54,21 +54,23 @@
 
   <script type="text/x-handlebars" data-template-name="create-member">
     <div class="inputs">
-      {{view Em.TextField valueBinding="view.member_name" placeholder="Someone I know"}}
+      {{view Em.TextField valueBinding="view.member_name" placeholder="Someone you know"}}
       will be played by
-      {{view Em.TextField valueBinding="view.actor_name" placeholder="an actor we're searching for..."}}
+      {{view Em.TextField valueBinding="view.actor_name" placeholder="an actor you're searching for..."}}
     </div>
     {{#each person in App.tmdbPeople.content}}
-      <div>
-        <h3 class="name">{{person.name}}</h3>
-        {{#each img in person.fullImagePaths}}
-          {{#with img}}
-            <div class="profile">
-              <a href="#" {{action createMember person.name img target="view"}}><img {{bindAttr src="this"}}/></a>
-            </div>
-          {{/with}}
-        {{/each}}
-      </div>
+      {{#if person.images.length}}
+        <div>
+          <h3 class="name">{{person.name}}</h3>
+          {{#each img in person.fullImagePaths}}
+            {{#with img}}
+              <div class="profile">
+                <a href="#" {{action createMember person.name img target="view"}}><img {{bindAttr src="this"}}/></a>
+              </div>
+            {{/with}}
+          {{/each}}
+        </div>
+      {{/if}}
     {{/each}}
   </script>
 

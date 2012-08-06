@@ -74,6 +74,10 @@ App.tmdbPeople = Em.ArrayController.create({
 
 App.CreateMemberView = Em.View.extend({
   templateName: 'create-member',
+  tmdb_api: {
+    url_prefix: 'http://api.themoviedb.org/3',
+    key: '212c19296f5ae6b2648ae1ef16da54a2'
+  },
   createMember: function(event) {
     this.get('members').createRecord({
       name: this.get('member_name'),
@@ -83,24 +87,27 @@ App.CreateMemberView = Em.View.extend({
     App.store.commit();
   },
   getImages: function() {
-    var api = {
-      //url_prefix: 'http://api.themoviedb.org/3',
-      url_prefix: '/tmdb',
-      key: ''
-    };
-    $.get(api.url_prefix + '/search/person', {
-      api_key: api.key,
+    var self = this;
+    this.get('request') && this.get('request').abort();
+    if (!this.get('actor_name')) {
+      App.get('tmdbPeople').clear();
+      return;
+    }
+    var url_prefix = self.get('tmdb_api').url_prefix;
+    var request = $.get(url_prefix + '/search/person', {
+      api_key: self.get('tmdb_api').key,
       query: this.get('actor_name')
     }, function(search_res) {
       App.get('tmdbPeople').clear();
       search_res.results.forEach(function(person) {
+        self.set('request', null);
         var tmdbPerson = App.TMDBPerson.create({
           id: person.id,
           name: person.name
         });
         App.get('tmdbPeople').pushObject(tmdbPerson);
-        $.get(api.url_prefix + '/person/%@/images'.fmt(person.id), {
-          api_key: api.key
+        $.get(url_prefix + '/person/%@/images'.fmt(person.id), {
+          api_key: self.get('tmdb_api').key
         }, function(images_res) {
           var images = images_res.profiles.map(function(profile) {
             return profile.file_path;
@@ -109,6 +116,7 @@ App.CreateMemberView = Em.View.extend({
         });
       });
     });
+    this.set('request', request);
   }.observes('actor_name')
 });
 
