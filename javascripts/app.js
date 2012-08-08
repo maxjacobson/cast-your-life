@@ -1,4 +1,14 @@
-var App = Em.Application.create({});
+var App = Em.Application.create({
+  ready: function() {
+    $(document)
+      .ajaxStart(function() {
+        App.set('waiting_for_ajax', true);
+      })
+      .ajaxStop(function() {
+        App.set('waiting_for_ajax', false);
+      });
+  }
+});
 
 
 /********
@@ -19,13 +29,18 @@ App.Member = DS.Model.extend({
 App.Movie.FIXTURES = [
   {
     id: 1,
-    title: 'Soul Train'
+    title: 'Soul Train',
   },
   {
     id: 2,
     title: 'Max Jacobson and the Horrible Lights'
+  },
+  {
+    id: 3,
+    title: 'The Jacobson Family'
   }
 ];
+
 
 App.store = DS.Store.create({
   revision: 4,
@@ -49,9 +64,24 @@ App.MoviesView = Em.View.extend({
 
 App.MovieController = Em.ObjectController.extend({});
 App.MovieView = Em.View.extend({
-  templateName: 'movie',
-
+  templateName: 'movie'
 });
+
+App.MemberItemView = Em.View.extend({
+  is_hidden: false,
+  hideMemberItem: function(event) {
+    this.set('is_hidden', true);
+  }
+  //deleteMemberItem: function(event) {
+  //
+  //console.log(this.get('controller.members'));
+  // var member = App.store.find(App.Member, event.context.get('id'));
+  // console.log(member);
+  // App.store.deleteRecord(member);
+  // //member.deleteRecord();
+  // App.store.commit();
+  //}
+})
 
 
 App.TMDBPerson = Em.Object.extend({
@@ -74,11 +104,16 @@ App.tmdbPeople = Em.ArrayController.create({
 
 App.CreateMemberView = Em.View.extend({
   templateName: 'create-member',
+  lacks_member_name: function() {
+    return !this.get('member_name');
+  }.property('member_name'),
   tmdb_api: {
     url_prefix: 'http://api.themoviedb.org/3',
     key: '212c19296f5ae6b2648ae1ef16da54a2'
   },
   createMember: function(event) {
+    if(! this.get('member_name'))
+      return;
     this.get('members').createRecord({
       name: this.get('member_name'),
       actor_name: event.contexts[0],
