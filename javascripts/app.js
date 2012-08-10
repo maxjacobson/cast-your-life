@@ -84,7 +84,7 @@ App.MemberItemView = Em.View.extend({
 })
 
 
-App.TMDBPerson = Em.Object.extend({
+App.Actor = Em.Object.extend({
   id: null,
   name: null,
   init: function() {
@@ -96,10 +96,6 @@ App.TMDBPerson = Em.Object.extend({
       return "http://cf2.imgobject.com/t/p/w185%@".fmt(image);
     });
   }.property('images')
-});
-
-App.tmdbPeople = Em.ArrayController.create({
-  content: []
 });
 
 App.CreateMemberView = Em.View.extend({
@@ -125,7 +121,7 @@ App.CreateMemberView = Em.View.extend({
     var self = this;
     this.get('request') && this.get('request').abort();
     if (!this.get('actor_name')) {
-      App.get('tmdbPeople').clear();
+      App.get('actors').clear();
       return;
     }
     var url_prefix = self.get('tmdb_api').url_prefix;
@@ -133,21 +129,22 @@ App.CreateMemberView = Em.View.extend({
       api_key: self.get('tmdb_api').key,
       query: this.get('actor_name')
     }, function(search_res) {
-      App.get('tmdbPeople').clear();
+      App.get('actors').clear();
       search_res.results.forEach(function(person) {
         self.set('request', null);
-        var tmdbPerson = App.TMDBPerson.create({
+        var actor = App.Actor.create({
           id: person.id,
           name: person.name
         });
-        App.get('tmdbPeople').pushObject(tmdbPerson);
+        App.get('actors').pushObject(actor);
+		console.log(actor);
         $.get(url_prefix + '/person/%@/images'.fmt(person.id), {
           api_key: self.get('tmdb_api').key
         }, function(images_res) {
           var images = images_res.profiles.map(function(profile) {
             return profile.file_path;
           });
-          tmdbPerson.set('images', images);
+          actor.set('images', images);
         });
       });
     });
@@ -155,12 +152,23 @@ App.CreateMemberView = Em.View.extend({
   }.observes('actor_name')
 });
 
-App.PeopleController = Em.ArrayController.extend({});
-
 App.NameField = Em.TextField.extend({
   contentBinding: ''
 });
 
+App.FriendsController = Em.ArrayController.extend({});
+App.FriendsView = Em.View.extend({
+  templateName: 'friends'
+});
+
+App.actors = Em.ArrayController.create({
+	content: []
+});
+
+// App.ActorsController = Em.ArrayController.extend({});
+App.ActorsView = Em.View.extend({
+  templateName: 'actors'
+});
 
 /**********
  * Router *
@@ -197,6 +205,7 @@ App.Router = Em.Router.extend({
         show: Em.Route.extend({
           route: '/'
         }),
+        
       })
     })
   })
