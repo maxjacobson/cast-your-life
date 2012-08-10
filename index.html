@@ -53,17 +53,18 @@
 
   <script type="text/x-handlebars" data-template-name="movie">
     <div class="row">
-      <div class="span6">
-        {{view App.CreateMemberView membersBinding="members"}}
-      </div>
-      <div class="span6">
+      <div class="offset2 span8">
         <h2>{{title}}</h2><hr />
         {{#each members}}
           {{#view App.MemberItemView}}
             {{#unless view.is_hidden}}
               <div class="member-item">
-                <img {{bindAttr src="actor_image"}}/>
-                {{name}} will be played by {{actor_name}}
+                <div class="thumb-wrapper">
+                  <img {{bindAttr src="actor_image"}}/>
+                </div>
+                <div class="text">
+                  {{name}} will be played by {{actor_name}}
+                </div>
                 <a href="#" {{action hideMemberItem this target="view"}}<i class="icon-remove-circle"></i></a>
               </div>
             {{/unless}}
@@ -71,11 +72,16 @@
         {{/each}}
       </div>
     </div>
+    <div class="row">
+      <div class="offset2 span8">
+        {{view App.CreateMemberView membersBinding="members"}}
+      </div>
+    </div-->
   </script>
 
   <script type="text/x-handlebars" data-template-name="create-member">
     <div class="inputs">
-      <span {{bindAttr class="view.lacks_member_name:error view.lacks_member_name:control-group"}}>{{view Em.TextField valueBinding="view.member_name" placeholder="Someone you know"}}</span>
+      <span {{bindAttr class="view.lacks_member_name:error view.lacks_member_name:control-group"}}>{{view App.FriendField valueBinding="view.member_name" placeholder="Someone you know"}}</span>
       will be played by
       {{view Em.TextField valueBinding="view.actor_name" placeholder="an actor you're searching for..."}}
     </div>

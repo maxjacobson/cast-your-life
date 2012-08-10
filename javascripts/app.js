@@ -117,7 +117,9 @@ App.CreateMemberView = Em.View.extend({
     });
     App.store.commit();
   },
-  getImages: function() {
+
+
+  getActors: function() {
     var self = this;
     this.get('request') && this.get('request').abort();
     if (!this.get('actor_name')) {
@@ -156,15 +158,41 @@ App.NameField = Em.TextField.extend({
   contentBinding: ''
 });
 
-App.FriendsController = Em.ArrayController.extend({});
-App.FriendsView = Em.View.extend({
-  templateName: 'friends'
+App.friends = Em.ArrayController.create({
+  content: [],
+  init: function() {
+    var self = this;
+    $.getJSON('https://graph.facebook.com/me/friends?access_token=AAAAAAITEghMBAPF52BWzgUC3zQYVGKrOoCIxkDIDieyJOShQZBgM2R9iZBNYfbYH2a69AVSD49rEWeeHgsLpsBSk59eAG3S4hKE7ZCoHgZDZD', function(response) {
+      self.set('content', response.data);
+    });
+  }
 });
+App.FriendField = Em.TextField.extend({
+  friendsBinding: 'App.friends.content',
+  attributeBindings: 'data-provide'.w(),
+  'data-provide': 'typeahead',
+  initTypeahead: function() {
+    var names = this.get('friends').map(function(friend) {
+      return friend.name;
+    });
+    this.$().typeahead({
+      source: names,
+      matcher: function(item) {
+        a=this.query;
+        console.log(a);
+        return item.toLowerCase().indexOf(this.query) >= 0;
+      }
+    });
+  }.observes('friends')
+})
+
+// App.FriendsView = Em.View.extend({
+//   templateName: 'friends'
+// });
 
 App.actors = Em.ArrayController.create({
 	content: []
 });
-
 // App.ActorsController = Em.ArrayController.extend({});
 App.ActorsView = Em.View.extend({
   templateName: 'actors'
