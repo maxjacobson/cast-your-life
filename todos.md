@@ -13,3 +13,8 @@
 * re-size the indicator
 * add tmdb attribution (we did agree to it)
 
+## style
+
+* come up with a visual style for the whole thing and make it happen
+* i kinda want to try this
+* I'm curious about how developers and designers share responsibilities. Like, if I were the designer and you were the developer, would I ask you to structure the divs in a certain way and give you class names and then get to work? or would i go in and do that?
