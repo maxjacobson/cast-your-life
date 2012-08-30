@@ -1,44 +1,59 @@
+$gold: #BF7522;
+$border-radius: 3em;
 
 * {
-  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 //  -webkit-border-radius: 0px !important;
 //  border-radius: 0px !important;
 }
 
 .indicator {
-	img {
-		max-width: 5px;
-	}
+    img {
+        max-width: 5px;
+    }
 }
 
 .profile {
-	display: inline-block;
-	img {
-		max-width: 128px;
-		max-height: 128px;
-	}
+    display: inline-block;
+    img {
+        max-width: 128px;
+        max-height: 128px;
+    }
 }
 
 .inputs input {
-	width: 180px;
+    width: 180px;
 }
 
 
 .thumb-wrapper {
-	border: 1px solid green;
-	width: 102px;
-	height: 102px;
-	text-align: center;
-	padding: 2px;
-	img {
-		max-width: 96px;
-		max-height: 96px;
-	}
-	display: inline-block;
+    border: 1px solid green;
+    width: 102px;
+    height: 102px;
+    text-align: center;
+    padding: 2px;
+    img {
+        max-width: 96px;
+        max-height: 96px;
+    }
+    display: inline-block;
 }
 .member-item {
-	padding: 5px;
-	.text {
-		display: inline-block;
-	}
+    padding: 5px;
+    .text {
+        display: inline-block;
+    }
+}
+
+.credits {
+    width: 300px;
+    margin-top: 400px;
+    padding: 2em;
+    border-top-left-radius: $border-radius;
+    border-top-right-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    border: 5px;
+    border-style: solid;
+    border-color: $gold;
 }

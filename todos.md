@@ -11,7 +11,6 @@
 ## small
 
 * re-size the indicator
-* add tmdb attribution (we did agree to it)
 
 ## style
 
