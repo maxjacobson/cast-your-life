@@ -8,49 +8,48 @@ $credits-rounded-amount: 3em;
 }
 
 .indicator {
-    img {
-        max-width: 5px;
-    }
+  img {
+    max-width: 5px;
+  }
 }
 
 .profile {
-    display: inline-block;
-    img {
-        max-width: 128px;
-        max-height: 128px;
-    }
+  display: inline-block;
+  img {
+    max-width: 128px;
+    max-height: 128px;
+  }
 }
 
 .inputs input {
-    width: 180px;
+  width: 180px;
 }
-
 
 .thumb-wrapper {
-    border: 1px solid green;
-    width: 102px;
-    height: 102px;
-    text-align: center;
-    padding: 2px;
-    img {
-        max-width: 96px;
-        max-height: 96px;
-    }
-    display: inline-block;
+  border: 1px solid green;
+  width: 102px;
+  height: 102px;
+  text-align: center;
+  padding: 2px;
+  img {
+      max-width: 96px;
+      max-height: 96px;
+  }
+  display: inline-block;
 }
 .member-item {
-    padding: 5px;
-    .text {
-        display: inline-block;
-    }
+  padding: 5px;
+  .text {
+      display: inline-block;
+  }
 }
 
 .credits {
-    width: 300px;
-    margin-top: 400px;
-    padding: 2em;
-    border-radius: $credits-rounded-amount;
-    border: 5px;
-    border-style: solid;
-    border-color: $gold;
+  width: 300px;
+  margin-top: 400px;
+  padding: 2em;
+  border-radius: $credits-rounded-amount;
+  border: 5px;
+  border-style: solid;
+  border-color: $gold;
 }

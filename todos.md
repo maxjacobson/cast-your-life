@@ -11,6 +11,7 @@
 ## small
 
 * re-size the indicator
+    * what indicator?
 
 ## style
 
