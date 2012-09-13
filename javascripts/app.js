@@ -26,25 +26,14 @@ App.Member = DS.Model.extend({
   actor_image: DS.attr('string')
 });
 
-App.Movie.FIXTURES = [
-  {
-    id: 1,
-    title: 'Soul Train',
-  },
-  {
-    id: 2,
-    title: 'Max Jacobson and the Horrible Lights'
-  },
-  {
-    id: 3,
-    title: 'The Jacobson Family'
-  }
-];
-
+App.adapter = DS.RESTAdapter.create({
+});
 
 App.store = DS.Store.create({
   revision: 4,
-  adapter: DS.FixtureAdapter.create()
+  adapter: DS.RESTAdapter.create({
+    namespace: 'api'
+  })
 });
 
 
@@ -57,14 +46,22 @@ App.ApplicationView = Em.View.extend({
   templateName: 'application'
 });
 
-App.MoviesController = Em.ArrayController.extend({});
-App.MoviesView = Em.View.extend({
-  templateName: 'movies'
-});
-
 App.MovieController = Em.ObjectController.extend({});
 App.MovieView = Em.View.extend({
-  templateName: 'movie'
+  templateName: 'movie',
+  changeTitle: function(event) {
+    var new_title = prompt('New title?', event.context.get('title'));
+    if (new_title) {
+      this.set('controller.title', new_title);
+      App.store.commit();
+    }
+  },
+  checkTitle: function() {
+    if (this.get('controller.isLoaded') && !this.get('controller.title')) {
+      var event = $.Event('changeTitle', { context: this.get('controller') });
+      this.trigger('changeTitle', event);
+    }
+  }.observes('controller.isLoaded')
 });
 
 App.MemberItemView = Em.View.extend({
@@ -208,32 +205,26 @@ App.Router = Em.Router.extend({
 
   root: Em.Route.extend({
 
-    index: Em.Route.extend({
+    movie: Em.Route.extend({
       route: '/',
-      redirectsTo: 'movies.list'
-    }),
-
-    movies: Em.Route.extend({
-      route: '/movies',
-      connectOutlets: function(router) {
-        router.get('applicationController').connectOutlet('movies', App.Movie.find());
-      },
-      list: Em.Route.extend({
+      generate: Em.Route.extend({
         route: '/',
-        connectOutlets: function(router) {
-          router.get('applicationController').connectOutlet('movies', App.Movie.find());
+        enter: function(router) {
+          var movie = App.Movie.createRecord();
+          App.store.commit();
+          movie.addObserver('isLoaded', function() {
+            if (movie.get('isLoaded')) {
+              // TODO need to remove observer somehow?
+              router.transitionTo('show', movie);
+            }
+          });
         }
       }),
-      showMovie: Em.Route.transitionTo('movie.show'),
-      movie: Em.Route.extend({
+      show: Em.Route.extend({
         route: '/:movie_id',
         connectOutlets: function(router, movie) {
           router.get('applicationController').connectOutlet('movie', movie);
-        },
-        show: Em.Route.extend({
-          route: '/'
-        }),
-        
+        }        
       })
     })
   })

@@ -44,21 +44,10 @@
     </div>
   </script>
 
-  <script type="text/x-handlebars" data-template-name="movies">
-    <h2>Movies</h2>
-    <ul>
-      {{#each movie in controller}}
-        {{#with movie}}
-          <li><a {{action showMovie movie href=true}}>{{title}}</a></li>
-        {{/with}}
-      {{/each}}
-    </ul>
-  </script>
-
   <script type="text/x-handlebars" data-template-name="movie">
     <div class="row">
       <div class="offset2 span8">
-        <h2>{{title}}</h2><hr />
+        <h2><a {{action changeTitle this target="view"}}>{{title}}</a></h2><hr />
         {{#each members}}
           {{#view App.MemberItemView}}
             {{#unless view.is_hidden}}
