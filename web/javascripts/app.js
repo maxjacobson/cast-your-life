@@ -21,9 +21,10 @@ App.Movie = DS.Model.extend({
 });
 
 App.Member = DS.Model.extend({
-  name: DS.attr('string'),
+  movie: DS.belongsTo('App.Movie'),
+  friend_name: DS.attr('string'),
   actor_name: DS.attr('string'),
-  actor_image: DS.attr('string')
+  actor_image_url: DS.attr('string')
 });
 
 App.adapter = DS.RESTAdapter.create({
@@ -65,19 +66,11 @@ App.MovieView = Em.View.extend({
 });
 
 App.MemberItemView = Em.View.extend({
-  is_hidden: false,
-  hideMemberItem: function(event) {
-    this.set('is_hidden', true);
+  deleteMember: function(event) {
+    var member = event.context;
+    member.deleteRecord();
+    App.store.commit();
   }
-  //deleteMemberItem: function(event) {
-  //
-  //console.log(this.get('controller.members'));
-  // var member = App.store.find(App.Member, event.context.get('id'));
-  // console.log(member);
-  // App.store.deleteRecord(member);
-  // //member.deleteRecord();
-  // App.store.commit();
-  //}
 })
 
 
@@ -97,24 +90,24 @@ App.Actor = Em.Object.extend({
 
 App.CreateMemberView = Em.View.extend({
   templateName: 'create-member',
-  lacks_member_name: function() {
-    return !this.get('member_name');
-  }.property('member_name'),
+  lacks_friend_name: function() {
+    return !this.get('friend_name');
+  }.property('friend_name'),
   tmdb_api: {
     url_prefix: 'http://api.themoviedb.org/3',
     key: '212c19296f5ae6b2648ae1ef16da54a2'
   },
   createMember: function(event) {
-    if(! this.get('member_name'))
+    if(! this.get('friend_name'))
       return;
     this.get('members').createRecord({
-      name: this.get('member_name'),
+      movie: App.get('router.movieController.id'),
+      friend_name: this.get('friend_name'),
       actor_name: event.contexts[0],
-      actor_image: event.contexts[1]
+      actor_image_url: event.contexts[1]
     });
     App.store.commit();
   },
-
 
   getActors: function() {
     var self = this;
@@ -136,7 +129,7 @@ App.CreateMemberView = Em.View.extend({
           name: person.name
         });
         App.get('actors').pushObject(actor);
-		console.log(actor);
+
         $.get(url_prefix + '/person/%@/images'.fmt(person.id), {
           api_key: self.get('tmdb_api').key
         }, function(images_res) {
@@ -158,10 +151,10 @@ App.NameField = Em.TextField.extend({
 App.friends = Em.ArrayController.create({
   content: [],
   init: function() {
-    var self = this;
-    $.getJSON('https://graph.facebook.com/me/friends?access_token=AAAAAAITEghMBAPF52BWzgUC3zQYVGKrOoCIxkDIDieyJOShQZBgM2R9iZBNYfbYH2a69AVSD49rEWeeHgsLpsBSk59eAG3S4hKE7ZCoHgZDZD', function(response) {
-      self.set('content', response.data);
-    });
+    // var self = this;
+    // $.getJSON('https://graph.facebook.com/me/friends?access_token=AAAAAAITEghMBAPF52BWzgUC3zQYVGKrOoCIxkDIDieyJOShQZBgM2R9iZBNYfbYH2a69AVSD49rEWeeHgsLpsBSk59eAG3S4hKE7ZCoHgZDZD', function(response) {
+    //   self.set('content', response.data);
+    // });
   }
 });
 App.FriendField = Em.TextField.extend({
@@ -188,7 +181,7 @@ App.FriendField = Em.TextField.extend({
 // });
 
 App.actors = Em.ArrayController.create({
-	content: []
+  content: []
 });
 // App.ActorsController = Em.ArrayController.extend({});
 App.ActorsView = Em.View.extend({
@@ -207,17 +200,17 @@ App.Router = Em.Router.extend({
 
     movie: Em.Route.extend({
       route: '/',
+      newMovie: Em.Route.transitionTo('generate'),
       generate: Em.Route.extend({
         route: '/',
         enter: function(router) {
           var movie = App.Movie.createRecord();
-          App.store.commit();
-          movie.addObserver('isLoaded', function() {
-            if (movie.get('isLoaded')) {
-              // TODO need to remove observer somehow?
+          movie.reopen({
+            didCreate: function() {
               router.transitionTo('show', movie);
             }
           });
+          App.store.commit();
         }
       }),
       show: Em.Route.extend({

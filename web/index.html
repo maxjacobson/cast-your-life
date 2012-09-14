@@ -28,6 +28,7 @@
         <div class="row">
           <div class="span6">
             <h1 class="title">Casting Director <small>Cast your life</small></h1>
+            <a {{action newMovie href="true"}}>New Movie</a>
           </div>
           <div class="span6">
             {{#if App.waiting_for_ajax}}
@@ -50,15 +51,17 @@
         <h2><a {{action changeTitle this target="view"}}>{{title}}</a></h2><hr />
         {{#each members}}
           {{#view App.MemberItemView}}
-            {{#unless view.is_hidden}}
+            {{#unless isDeleted}}
               <div class="member-item">
                 <div class="thumb-wrapper">
-                  <img {{bindAttr src="actor_image"}}/>
+                  <img {{bindAttr src="actor_image_url"}}/>
                 </div>
                 <div class="text">
-                  {{name}} will be played by {{actor_name}}
+                  <strong>{{friend_name}}</strong> will be played by <strong>{{actor_name}}</strong>
                 </div>
-                <a href="#" {{action hideMemberItem this target="view"}}<i class="icon-remove-circle"></i></a>
+                <div class="pull-right">
+                  <a href="#" {{action deleteMember this target="view"}}<i class="icon-remove-circle"></i></a>
+                </div>
               </div>
             {{/unless}}
           {{/view}}
@@ -74,7 +77,7 @@
 
   <script type="text/x-handlebars" data-template-name="create-member">
     <div class="inputs">
-      <span {{bindAttr class="view.lacks_member_name:error view.lacks_member_name:control-group"}}>{{view App.FriendField valueBinding="view.member_name" placeholder="Someone you know"}}</span>
+      <span {{bindAttr class="view.lacks_friend_name:error view.lacks_friend_name:control-group"}}>{{view App.FriendField valueBinding="view.friend_name" placeholder="Someone you know"}}</span>
       will be played by
       {{view Em.TextField valueBinding="view.actor_name" placeholder="an actor you're searching for..."}}
     </div>

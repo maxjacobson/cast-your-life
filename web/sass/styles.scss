@@ -7,10 +7,14 @@ $credits-rounded-amount: 3em;
 //  border-radius: 0px !important;
 }
 
+.page-header {
+  position: relative;
+}
 .indicator {
-  img {
-    max-width: 5px;
-  }
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
 }
 
 .profile {
@@ -32,15 +36,15 @@ $credits-rounded-amount: 3em;
   text-align: center;
   padding: 2px;
   img {
-      max-width: 96px;
-      max-height: 96px;
+    max-width: 96px;
+    max-height: 96px;
   }
   display: inline-block;
 }
 .member-item {
   padding: 5px;
   .text {
-      display: inline-block;
+    display: inline-block;
   }
 }
 
