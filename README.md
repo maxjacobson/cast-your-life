@@ -3,14 +3,15 @@
 Cast your life.
 
 
-## Node API
+## Node API ##
+REST API for "movies" and (cast) "members".
 
-## SQL DB schema
+## SQL DB schema ##
 - movies: id, title
 - members: id, movie_id, friend_name, friend_fb_id, actor_name, actor_tmdb_id, actor_image_url
 
 
-## Hosting instructions ##
+## Server app hosting instructions ##
 
 * a2enmod proxy proxy_http
 * vim /etc/apache2/sites-enabled/000-default
@@ -25,10 +26,12 @@ Cast your life.
 ## Tools ##
 
 ### Tech Components ###
+* compass + sass + bootstrap
+* ember.js
 * express.js
 * postgresql
 
 ### Dev Tools ###
-* node-supervisor (dev)
+* node-supervisor
 * Sublime Text 2
 * tmux
