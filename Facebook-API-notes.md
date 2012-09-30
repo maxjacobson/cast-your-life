@@ -196,3 +196,18 @@ The publish dialog can be done with [`FB.ui`](https://developers.facebook.com/do
 ### [Open Graph](https://developers.facebook.com/docs/opengraph/keyconcepts/)
 
 This is how we will share stuff when we're done I think. Not sure if we use this if we're a self-hosted app. Not sure if we need to be a self-hosted app?
+
+### searching
+
+(For reference, I'm back looking at [this page](https://developers.facebook.com/docs/reference/api/))
+
+Searches look like this: `https://graph.facebook.com/search?q=QUERY&type=OBJECT_TYPE`
+
+This example is pertinent. How to search for dudes named Mark:
+
+`https://graph.facebook.com/search?q=mark&type=user&access_token=...`
+
+We can also add specific fields within an object to search, so maybe we'd prefer to do it like:
+
+`https://graph.facebook.com/search?fields=name&q=mark&type=user&access_token=...`
+
