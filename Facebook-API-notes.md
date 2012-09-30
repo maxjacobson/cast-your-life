@@ -3,7 +3,7 @@
 ## notes
 
 * every object has an ID and to fetch that object, you query <https://graph.facebook.com/ID>
-* the ID can be replaced with their facebook username, aka 'platon' or 'jacobson'
+* the ID can be replaced with their facebook username, aka `platon` or `jacobson`
 * objects include stuff like people, pages, events, photos, photo albums, statuses, etc...
 
 we'll need an access token to get non public information on behalf of people
@@ -12,7 +12,7 @@ this can look like:
 
     https://graph.facebook.com/btaylor?access_token=AAAAAAITEghMBAEUMd6ZBG8kZCENq5RZBYBcpwpBlqJ26GryjV1mqPH1ujflyDrWyoevoM5eHt91ZAVwEWsWjEvzPHihtAbUnhwdYg64qngZDZD
 
-this uses OAuth 2.0. I understand OAuth from a user's permission. It's nice because users will never need to give *us* their facebook credentials. they'll click a button, go to facebook, click another button, and come back. if they're not logged in to facebook, they'll log in *there*.
+this uses OAuth 2.0. I understand OAuth from a user's perspective. It's nice because users will never need to give *us* their facebook credentials. they'll click a button, go to facebook, click another button, and come back. if they're not logged in to facebook, they'll log in *there*.
 
 there are SDKs for us, both client-side and server-side. I'm assuming we want [the client-side / javascript one](https://developers.facebook.com/docs/authentication/client-side/).
 
