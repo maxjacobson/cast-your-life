@@ -17,7 +17,18 @@ var App = Em.Application.create({
         cookie     : true, // enable cookies to allow the server to access the session
         xfbml      : true  // parse XFBML
       });
+      FB.login(function(response) {
+        if (response.authResponse) {
+          console.log('logged into FB');
 
+          FB.api('me/friends', function(response) {
+            App.friends.set('content', response.data);
+          });
+        }
+        else {
+          console.error('couldn\'t log into FB');
+        }
+      }, { scope: 'user_photos,friends_photos' })
       // Additional initialization code here
     };
     // Load the SDK Asynchronously
@@ -29,46 +40,6 @@ var App = Em.Application.create({
        ref.parentNode.insertBefore(js, ref);
      }(document));
 
-
-
-
-  }
-});
-
-App.FBLoginButton = Em.Button.extend({
-  click: function(event) {
-    FB.login(function(response) {
-      if (response.authResponse) {
-        FB.api('/me', function(response) {
-          console.log('Good to see you, ' + response.name + '.');
-        });
-        FB.api('/me/photos', { limit: 3 }, function(response) {
-          console.log(response);
-          // for (var i=0, l=response.length; i<l; i++) {
-          //   var post = response[i];
-          //   if (post.message) {
-          //     alert('Message: ' + post.message);
-          //   } else if (post.attachment && post.attachment.name) {
-          //     alert('Attachment: ' + post.attachment.name);
-          //   }
-          // }
-        });
-
-      }
-      else {
-        console.log('no.');
-      }
-    }, { scope: 'user_photos,friends_photos' });
-
-  }
-});
-
-App.FBLogoutButton = Em.Button.extend({
-  click: function(event) {
-    FB.logout(function(response) {
-      console.log('You are now logged out');
-      // user is now logged out
-    });
   }
 });
 
@@ -211,31 +182,29 @@ App.NameField = Em.TextField.extend({
 });
 
 App.friends = Em.ArrayController.create({
-  content: [],
-  init: function() {
-    // var self = this;
-    // $.getJSON('https://graph.facebook.com/me/friends?access_token=AAAAAAITEghMBAPF52BWzgUC3zQYVGKrOoCIxkDIDieyJOShQZBgM2R9iZBNYfbYH2a69AVSD49rEWeeHgsLpsBSk59eAG3S4hKE7ZCoHgZDZD', function(response) {
-    //   self.set('content', response.data);
-    // });
-  }
+  content: []
 });
 App.FriendField = Em.TextField.extend({
   friendsBinding: 'App.friends.content',
-  attributeBindings: 'data-provide'.w(),
-  'data-provide': 'typeahead',
-  initTypeahead: function() {
-    var names = this.get('friends').map(function(friend) {
-      return friend.name;
-    });
-    this.$().typeahead({
-      source: names,
-      matcher: function(item) {
-        a=this.query;
-        console.log(a);
-        return item.toLowerCase().indexOf(this.query) >= 0;
-      }
-    });
-  }.observes('friends')
+
+  // TODO App.friends.filter(function(friend) { return friend.name.toLowerCase().indexOf('ja') >= 0; })
+  
+
+  // attributeBindings: 'data-provide'.w(),
+  // 'data-provide': 'typeahead',
+  // initTypeahead: function() {
+  //   var names = this.get('friends').map(function(friend) {
+  //     return friend.name;
+  //   });
+  //   this.$().typeahead({
+  //     source: names,
+  //     matcher: function(item) {
+  //       a=this.query;
+  //       console.log(a);
+  //       return item.toLowerCase().indexOf(this.query) >= 0;
+  //     }
+  //   });
+  // }.observes('friends')
 })
 
 // App.FriendsView = Em.View.extend({

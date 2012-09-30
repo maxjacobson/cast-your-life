@@ -34,12 +34,6 @@
             <a {{action newMovie href="true"}}>New Movie</a>
           </div>
           <div class="span6">
-            {{#view App.FBLoginButton}}
-              Log in to FB
-            {{/view}}
-            {{#view App.FBLogoutButton}}
-              Log out of FB
-            {{/view}}
             {{#if App.waiting_for_ajax}}
               <span class="pull-right indicator"><img src="images/indicator.gif" /></span>
             {{/if}}
