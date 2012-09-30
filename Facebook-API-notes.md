@@ -173,7 +173,7 @@ And here's how to post something (requires the `publish_stream` permission):
 
 So like here's the API reference page for getting photos: <https://developers.facebook.com/docs/reference/api/photo/>
 
-We photo object fields that might be of interest to us:
+The photo object fields that might be of interest to us:
 
 * `id` -- photo id
 * `tags` -- who's in the photo, and their position in the photo
