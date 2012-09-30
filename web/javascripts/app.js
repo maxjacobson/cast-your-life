@@ -50,6 +50,15 @@ App.FBLoginButton = Em.Button.extend({
   }
 });
 
+App.FBLogoutButton = Em.Button.extend({
+  click: function(event) {
+    Fb.logout(function(response) {
+      console.log('You are now logged out');
+      // user is now logged out
+    });
+  }
+});
+
 
 /********
  * Data *
