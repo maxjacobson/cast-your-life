@@ -36,7 +36,7 @@ var App = Em.Application.create({
 });
 
 App.FBLoginButton = Em.Button.extend({
-
+  click: function(event) {
     FB.login(function(response) {
       if (response.authResponse) {
         FB.api('/me', function(response) {
