@@ -12,8 +12,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- got this from favicon.cc -->
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="stylesheet" href="stylesheets/sbootstrap.css">
   <link rel="stylesheet" href="stylesheets/styles.css?v=2">
 
@@ -22,6 +22,9 @@
   <![endif]-->
 </head>
 <body>
+
+  <div id="fb-root"></div>
+
   <script type="text/x-handlebars" data-template-name="application">
     <div class="container">
       <div class="page-header">
@@ -31,6 +34,9 @@
             <a {{action newMovie href="true"}}>New Movie</a>
           </div>
           <div class="span6">
+            {{#view App.FBLoginButton}}
+              Log in to FB
+            {{/view}}
             {{#if App.waiting_for_ajax}}
               <span class="pull-right indicator"><img src="images/indicator.gif" /></span>
             {{/if}}
