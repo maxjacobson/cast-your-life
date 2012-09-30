@@ -36,17 +36,30 @@ var App = Em.Application.create({
 });
 
 App.FBLoginButton = Em.Button.extend({
-  click: function(event) {
+
     FB.login(function(response) {
       if (response.authResponse) {
         FB.api('/me', function(response) {
           console.log('Good to see you, ' + response.name + '.');
         });
+        FB.api('/me/photos', { limit: 3 }, function(response) {
+          console.log(response);
+          // for (var i=0, l=response.length; i<l; i++) {
+          //   var post = response[i];
+          //   if (post.message) {
+          //     alert('Message: ' + post.message);
+          //   } else if (post.attachment && post.attachment.name) {
+          //     alert('Attachment: ' + post.attachment.name);
+          //   }
+          // }
+        });
+
       }
       else {
         console.log('no.');
       }
     }, { scope: 'user_photos,friends_photos' });
+
   }
 });
 
