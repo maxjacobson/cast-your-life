@@ -29,17 +29,9 @@ $credits-rounded-amount: 3em;
   width: 180px;
 }
 
-.thumb-wrapper {
-  border: 1px solid green;
-  width: 102px;
-  height: 102px;
-  text-align: center;
-  padding: 2px;
-  img {
-    max-width: 96px;
-    max-height: 96px;
-  }
-  display: inline-block;
+.thumb {
+  max-width: 128px;
+  max-height: 128px;
 }
 .member-item {
   padding: 5px;

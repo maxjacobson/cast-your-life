@@ -24,6 +24,13 @@ var App = Em.Application.create({
           FB.api('me/friends', function(response) {
             App.friends.set('content', response.data);
           });
+          FB.api('jacobson/photos', function(response) {
+            console.log(response);
+          });
+          FB.api('10100733303091525/picture', function(response) {
+            console.log(response);
+          });
+
         }
         else {
           console.error('couldn\'t log into FB');
@@ -104,7 +111,7 @@ App.MemberItemView = Em.View.extend({
     member.deleteRecord();
     App.store.commit();
   }
-})
+});
 
 
 App.Actor = Em.Object.extend({
@@ -115,7 +122,7 @@ App.Actor = Em.Object.extend({
     this.set('images', []);
   },
   fullImagePaths: function() {
-    return this.get('images').map(function (image) {
+    return this.get('images').map(function(image) {
       return "http://cf2.imgobject.com/t/p/w185%@".fmt(image);
     });
   }.property('images')
@@ -190,21 +197,21 @@ App.FriendField = Em.TextField.extend({
   // TODO App.friends.filter(function(friend) { return friend.name.toLowerCase().indexOf('ja') >= 0; })
   
 
-  // attributeBindings: 'data-provide'.w(),
-  // 'data-provide': 'typeahead',
-  // initTypeahead: function() {
-  //   var names = this.get('friends').map(function(friend) {
-  //     return friend.name;
-  //   });
-  //   this.$().typeahead({
-  //     source: names,
-  //     matcher: function(item) {
-  //       a=this.query;
-  //       console.log(a);
-  //       return item.toLowerCase().indexOf(this.query) >= 0;
-  //     }
-  //   });
-  // }.observes('friends')
+  attributeBindings: 'data-provide'.w(),
+  'data-provide': 'typeahead',
+  initTypeahead: function() {
+    var names = this.get('friends').map(function(friend) {
+      return friend.name; 
+    });
+    this.$().typeahead({
+      source: names,
+      matcher: function(item) {
+        a=this.query;
+        console.log(a);
+        return item.toLowerCase().indexOf(this.query) >= 0;
+      }
+    });
+  }.observes('friends')
 })
 
 // App.FriendsView = Em.View.extend({
@@ -215,8 +222,10 @@ App.actors = Em.ArrayController.create({
   content: []
 });
 // App.ActorsController = Em.ArrayController.extend({});
-App.ActorsView = Em.View.extend({
-  templateName: 'actors'
+App.PickerView = Em.View.extend({
+  templateName: 'picker',
+  tagName: 'ul',
+  classNames: 'unstyled'
 });
 
 /**********

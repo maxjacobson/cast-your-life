@@ -34,30 +34,21 @@
 }
 
 /* line 32, ../sass/styles.scss */
-.thumb-wrapper {
-  border: 1px solid green;
-  width: 102px;
-  height: 102px;
-  text-align: center;
-  padding: 2px;
-  display: inline-block;
-}
-/* line 38, ../sass/styles.scss */
-.thumb-wrapper img {
-  max-width: 96px;
-  max-height: 96px;
+.thumb {
+  max-width: 128px;
+  max-height: 128px;
 }
 
-/* line 44, ../sass/styles.scss */
+/* line 36, ../sass/styles.scss */
 .member-item {
   padding: 5px;
 }
-/* line 46, ../sass/styles.scss */
+/* line 38, ../sass/styles.scss */
 .member-item .text {
   display: inline-block;
 }
 
-/* line 51, ../sass/styles.scss */
+/* line 43, ../sass/styles.scss */
 .credits {
   width: 300px;
   margin-top: 400px;

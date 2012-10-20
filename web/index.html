@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title>Casting Director</title>
+  <title>Cast Your Life</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -29,11 +29,11 @@
     <div class="container">
       <div class="page-header">
         <div class="row">
-          <div class="span6">
-            <h1 class="title">Casting Director <small>Cast your life</small></h1>
+          <div class="span9">
+            <h1 class="title">Cast Your Life <small>Who would play you in a movie?</small></h1>
             <a {{action newMovie href="true"}}>New Movie</a>
           </div>
-          <div class="span6">
+          <div class="span3">
             {{#if App.waiting_for_ajax}}
               <span class="pull-right indicator"><img src="images/indicator.gif" /></span>
             {{/if}}
@@ -56,9 +56,7 @@
           {{#view App.MemberItemView}}
             {{#unless isDeleted}}
               <div class="member-item">
-                <div class="thumb-wrapper">
-                  <img {{bindAttr src="actor_image_url"}}/>
-                </div>
+                <img class="thumb img-polaroid" {{bindAttr src="actor_image_url"}}/>
                 <div class="text">
                   <strong>{{friend_name}}</strong> will be played by <strong>{{actor_name}}</strong>
                 </div>
@@ -84,22 +82,20 @@
       will be played by
       {{view Em.TextField valueBinding="view.actor_name" placeholder="an actor you're searching for..."}}
     </div>
-	{{view App.ActorsView}}
+	  {{view App.PickerView}}
   </script>
 
-  <script type="text/x-handlebars" data-template-name="actors">
+  <script type="text/x-handlebars" data-template-name="picker">
     {{#each person in App.actors.content}}
       {{#if person.images.length}}
-        <div>
-          <h3 class="name">{{person.name}}</h3>
-          {{#each img in person.fullImagePaths}}
-            {{#with img}}
-              <div class="profile">
-                <a href="#" {{action createMember person.name img target="view.parentView"}}><img {{bindAttr src="this"}}/></a>
-              </div>
-            {{/with}}
-          {{/each}}
-        </div>
+        <li class="pull-left">
+          {{#with person.fullImagePaths.firstObject}}
+            <div class="profile">
+              <a href="#" {{action createMember person.name img target="view.parentView"}}><img class="img-polaroid" {{bindAttr src="this"}}/></a>
+            </div>
+          {{/with}}
+          <div class="name">{{person.name}}</div>
+        </li>
       {{/if}}
     {{/each}}
   </script>
