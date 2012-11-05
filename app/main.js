@@ -19,7 +19,11 @@ app.get('/movies/:movie_id', function(req, res) {
 });
 
 app.post('/movies', express.bodyParser(), function(req, res) {
-  db.createMovie(function(err, movie) {
+  var title = 'Untitled';
+  if(req.body.title) {
+    title = req.body.title;
+  }
+  db.createMovie(title, function(err, movie) {
     if (err) { return console.error(err); }
     res.json({ movie: movie });
   });

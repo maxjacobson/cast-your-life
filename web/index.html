@@ -51,21 +51,9 @@
   <script type="text/x-handlebars" data-template-name="movie">
     <div class="row">
       <div class="offset2 span8">
-        <h2><a {{action changeTitle this target="view"}}>{{title}}</a></h2><hr />
+        <h2><a {{action changeTitle this target="view"}} href="#">{{title}}</a></h2><hr />
         {{#each members}}
-          {{#view App.MemberItemView}}
-            {{#unless isDeleted}}
-              <div class="member-item">
-                <img class="thumb img-polaroid" {{bindAttr src="actor_image_url"}}/>
-                <div class="text">
-                  <strong>{{friend_name}}</strong> will be played by <strong>{{actor_name}}</strong>
-                </div>
-                <div class="pull-right">
-                  <a href="#" {{action deleteMember this target="view"}}<i class="icon-remove-circle"></i></a>
-                </div>
-              </div>
-            {{/unless}}
-          {{/view}}
+          {{view App.MemberView}}
         {{/each}}
       </div>
     </div>
@@ -73,7 +61,24 @@
       <div class="offset2 span8">
         {{view App.CreateMemberView membersBinding="members"}}
       </div>
-    </div-->
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="member">
+    {{#unless isDeleted}}
+      <div class="member row">
+        <div class="span4 friend">
+          <strong>{{friend_name}}</strong>
+        </div>
+        <div class="span4 actor">
+          <img class="thumb img-polaroid" {{bindAttr src="actor_image_url"}}/>
+          <a href="#" {{action editActor this target="view"}}><strong>{{actor_name}}</strong></a>
+        </div>
+        <div class="delete-action">
+          <a href="#" {{action deleteMember this target="view"}}<i class="icon-remove-circle"></i></a>
+        </div>
+      </div>
+    {{/unless}}
   </script>
 
   <script type="text/x-handlebars" data-template-name="create-member">
@@ -87,14 +92,14 @@
 
   <script type="text/x-handlebars" data-template-name="picker">
     {{#each person in App.actors.content}}
-      {{#if person.images.length}}
+      {{#if person.profile_url}}
         <li class="pull-left">
-          {{#with person.fullImagePaths.firstObject}}
             <div class="profile">
-              <a href="#" {{action createMember person.name img target="view.parentView"}}><img class="img-polaroid" {{bindAttr src="this"}}/></a>
+              <a href="#" {{action createMember person.name person.profile_url target="view.parentView"}}>
+                <img class="img-polaroid" {{bindAttr src="person.profile_url"}}/>
+                <div class="name">{{person.name}}</div>
+              </a>
             </div>
-          {{/with}}
-          <div class="name">{{person.name}}</div>
         </li>
       {{/if}}
     {{/each}}

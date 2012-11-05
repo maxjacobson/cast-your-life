@@ -17,25 +17,47 @@ var App = Em.Application.create({
         cookie     : true, // enable cookies to allow the server to access the session
         xfbml      : true  // parse XFBML
       });
-      FB.login(function(response) {
-        if (response.authResponse) {
-          console.log('logged into FB');
 
-          FB.api('me/friends', function(response) {
-            App.friends.set('content', response.data);
-          });
-          FB.api('jacobson/photos', function(response) {
-            console.log(response);
-          });
-          FB.api('10100733303091525/picture', function(response) {
-            console.log(response);
-          });
 
+      var loggedInCallback = function(response) {
+        FB.api('me/friends', function(response) {
+          response.data.forEach(function(friend) {
+            var friend = App.Friend.create({
+              fb_id: friend.id,
+              name: friend.name,
+            });
+            App.get('friends').pushObject(friend);
+          });
+        });
+        // FB.api('jacobson/photos', function(response) {
+        //   console.log(response);
+        // });
+        // FB.api('10100733303091525/picture', function(response) {
+        //   console.log(response);
+        // });
+      }
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          // the user is logged in and has authenticated your
+          // app, and response.authResponse supplies
+          // the user's ID, a valid access token, a signed
+          // request, and the time the access token 
+          // and signed request each expire
+          loggedInCallback(response);
+        } else {
+          FB.login(function(response) {
+            if (response.authResponse) {
+              console.log('logged into FB');
+              loggedInCallback(response);
+            }
+            else {
+              console.error('couldn\'t log into FB', response);
+            }
+          }, { scope: 'user_photos,friends_photos' });
         }
-        else {
-          console.error('couldn\'t log into FB');
-        }
-      }, { scope: 'user_photos,friends_photos' })
+       });
+
+
       // Additional initialization code here
     };
     // Load the SDK Asynchronously
@@ -78,6 +100,40 @@ App.store = DS.Store.create({
 });
 
 
+App.Person = Em.Object.extend({
+  name: null,
+  profile_url: null,
+  images: null,
+});
+
+App.Actor = App.Person.extend({
+  tmdb_id: null,
+  init: function() {
+    this._super();
+    this.set('images', []);
+  },
+  fullImagePaths: function() {
+    return this.get('images').map(function(image) {
+      return "http://cf2.imgobject.com/t/p/w185%@".fmt(image);
+    });
+  }.property('images'),
+  profile_url: function() {
+    var profile_path = this.get('profile_path');
+    return profile_path ? 'http://cf2.imgobject.com/t/p/w92%@'.fmt(profile_path) : null;
+  }.property('profile_path')
+  // image_url: function() {
+  //   return this.get('fullImagePaths.firstObject');
+  // }.property('fullImagePaths')
+});
+
+App.Friend = App.Person.extend({
+  fb_id: null,
+  profile_url: function() {
+    return 'http://graph.facebook.com/$@/picture?type=large'.fmt(this.get('fb_id'));
+  }.property('fb_id')
+});
+
+
 /***********************
  * Controllers & Views *
  ***********************/
@@ -105,7 +161,12 @@ App.MovieView = Em.View.extend({
   }.observes('controller.isLoaded')
 });
 
-App.MemberItemView = Em.View.extend({
+App.MemberView = Em.View.extend({
+  templateName: 'member',
+  editActor: function(event) {
+    // this.$().after('pick');
+    App.PickerView.create().appendTo(this.$());
+  },
   deleteMember: function(event) {
     var member = event.context;
     member.deleteRecord();
@@ -113,20 +174,6 @@ App.MemberItemView = Em.View.extend({
   }
 });
 
-
-App.Actor = Em.Object.extend({
-  id: null,
-  name: null,
-  init: function() {
-    this._super();
-    this.set('images', []);
-  },
-  fullImagePaths: function() {
-    return this.get('images').map(function(image) {
-      return "http://cf2.imgobject.com/t/p/w185%@".fmt(image);
-    });
-  }.property('images')
-});
 
 App.CreateMemberView = Em.View.extend({
   templateName: 'create-member',
@@ -165,19 +212,20 @@ App.CreateMemberView = Em.View.extend({
       search_res.results.forEach(function(person) {
         self.set('request', null);
         var actor = App.Actor.create({
-          id: person.id,
-          name: person.name
+          tmdb_id: person.id,
+          name: person.name,
+          profile_path: person.profile_path
         });
         App.get('actors').pushObject(actor);
 
-        $.get(url_prefix + '/person/%@/images'.fmt(person.id), {
-          api_key: self.get('tmdb_api').key
-        }, function(images_res) {
-          var images = images_res.profiles.map(function(profile) {
-            return profile.file_path;
-          });
-          actor.set('images', images);
-        });
+        // $.get(url_prefix + '/person/%@/images'.fmt(person.id), {
+        //   api_key: self.get('tmdb_api').key
+        // }, function(images_res) {
+        //   var images = images_res.profiles.map(function(profile) {
+        //     return profile.file_path;
+        //   });
+        //   actor.set('images', images);
+        // });
       });
     });
     this.set('request', request);

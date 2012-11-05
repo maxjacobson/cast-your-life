@@ -4,11 +4,17 @@ var async = require('async'),
 var pg_client = new pg.Client('postgres://cast:eleluku@pauldechov.com:5432/cast');
 pg_client.connect();
 
-
-// TODO generate random base62 number (5 digit?) represented with [0-9A-Za-z]
-var id_index = 1;
 var generateID = function() {
-  return 'gen' + (id_index++);
+  var poolString = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+    poolArray = poolString.split(''),
+    randomArray = [],
+    len = 5,
+    randomString;
+  for (var i=0;i<len;i++) {
+    randomArray.push(poolArray[Math.floor(Math.random()*poolArray.length)]);
+  }
+  randomString = randomArray.join('');
+  return randomString;
 };
 var generateUniqueID = function(table_name, callback) {
   var id = null,
@@ -40,11 +46,11 @@ var reset = function(callback) {
   }, callback);
 };
 
-var createMovie = function(callback) {
+var createMovie = function(title, callback) {
   generateUniqueID('movies', function(err, id) {
     if (err) { return callback(err); }
-    console.log('inserting movie:', id);
-    pg_client.query('INSERT INTO movies (id) VALUES ($1) RETURNING id', [id], function(err, result) {
+    console.log('inserting movie:', id, title);
+    pg_client.query('INSERT INTO movies (id, title) VALUES ($1, $2) RETURNING id, title', [id, title], function(err, result) {
       callback(err, result.rows[0]);
     });
   });

@@ -21,6 +21,8 @@
 /* line 20, ../sass/styles.scss */
 .profile {
   display: inline-block;
+  padding: 0 8px 8px;
+  text-align: center;
 }
 /* line 22, ../sass/styles.scss */
 .profile img {
@@ -28,27 +30,34 @@
   max-height: 128px;
 }
 
-/* line 28, ../sass/styles.scss */
+/* line 30, ../sass/styles.scss */
 .inputs input {
   width: 180px;
 }
 
-/* line 32, ../sass/styles.scss */
+/* line 34, ../sass/styles.scss */
 .thumb {
   max-width: 128px;
   max-height: 128px;
 }
 
-/* line 36, ../sass/styles.scss */
-.member-item {
-  padding: 5px;
-}
 /* line 38, ../sass/styles.scss */
-.member-item .text {
-  display: inline-block;
+.member {
+  padding: 5px 0;
+  position: relative;
+}
+/* line 41, ../sass/styles.scss */
+.member .friend {
+  text-align: right;
+}
+/* line 44, ../sass/styles.scss */
+.member .delete-action {
+  position: absolute;
+  right: 0px;
+  top: 0px;
 }
 
-/* line 43, ../sass/styles.scss */
+/* line 51, ../sass/styles.scss */
 .credits {
   width: 300px;
   margin-top: 400px;

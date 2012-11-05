@@ -23,6 +23,8 @@ $credits-rounded-amount: 3em;
     max-width: 128px;
     max-height: 128px;
   }
+  padding: 0 8px 8px;
+  text-align: center;
 }
 
 .inputs input {
@@ -33,10 +35,16 @@ $credits-rounded-amount: 3em;
   max-width: 128px;
   max-height: 128px;
 }
-.member-item {
-  padding: 5px;
-  .text {
-    display: inline-block;
+.member {
+  padding: 5px 0;
+  position: relative;
+  .friend {
+    text-align: right;
+  }
+  .delete-action {
+    position: absolute;
+    right: 0px;
+    top: 0px;
   }
 }
 
